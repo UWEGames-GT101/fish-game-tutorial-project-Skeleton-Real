@@ -62,7 +62,13 @@ class MyASGEGame(pyasge.ASGEGame):
             return False
 
     def initFish(self) -> bool:
-        pass
+        if self.fish.loadTexture("/data/images/kenney_fishpack/fishTile_073.png"):
+            self.fish.z_order = 1
+            self.fish.scale = 1
+            self.fish.x = 300
+            self.fish.y = 300
+            return True
+        return False
 
     def initScoreboard(self) -> None:
         pass
@@ -83,14 +89,32 @@ class MyASGEGame(pyasge.ASGEGame):
         self.exit_option = pyasge.Text(self.data.fonts["MainFont"])
         self.exit_option.string = "EXIT"
         self.exit_option.position = [500, 400]
-        self.exit_option.colour = pyasge.COLOURS.YELLOW
+        self.exit_option.colour = pyasge.COLOURS.GRAY
         return True
 
     def clickHandler(self, event: pyasge.ClickEvent) -> None:
         pass
 
     def keyHandler(self, event: pyasge.KeyEvent) -> None:
-        pass
+        if event.action == pyasge.KEYS.KEY_PRESSED:
+            self.menu_option = 1 - self.menu_option
+            if self.menu_option == 0:
+                self.play_option.string = "START"
+                self.play_option.colour = pyasge.COLOURS.YELLOW
+                self.exit_option.string = "EXIT"
+                self.exit_option.colour = pyasge.COLOURS.GRAY
+            else:
+                self.play_option.string = "START"
+                self.play_option.colour = pyasge.COLOURS.GRAY
+                self.exit_option.string = "EXIT"
+                self.exit_option.colour = pyasge.COLOURS.YELLOW
+
+        if event.key == pyasge.KEYS.KEY_ENTER:
+            if self.menu_option == 1:
+                self.menu = False
+            else:
+                self.signalExit()
+
 
     def spawn(self) -> None:
         pass
@@ -120,7 +144,8 @@ class MyASGEGame(pyasge.ASGEGame):
             self.data.renderer.render(self.exit_option)
         else:
             # render the game here
-            pass
+            self.data.renderer.render(self.data.background)
+            self.data.renderer.render(self.fish)
 
 
 def main():
